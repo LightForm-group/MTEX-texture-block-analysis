@@ -24,7 +24,7 @@ pname = '/Users/mbcx9cd4/Documents/MATLAB/ebsd/MTEX-texture-block-analysis/';
 
 % which files to be imported
 sample_name = 'Ti64 for Diamond 915C 87pct Sample 1 TD-ND Plane'
-data_path = strcat('Data/'sample_name,'/',sample_name,' Data.crc')
+data_path = strcat('Data/',sample_name,'/',sample_name,' Data.crc')
 
 analysis_path = strcat('Analysis/',sample_name,'/') % path for saving the data
 
@@ -64,7 +64,7 @@ IPF_map_plot(phase, ebsd, outputFileName, visible)
 phase = 'alpha'
 ori = ebsd('Ti-Hex').orientations
 contour_step = 0.1
-pf_max = 3.0
+pf_max = 5.0
 outputFileName = strcat(analysis_path,sample_name,'_PF_entire_region')
 pole_figure_plot(phase, ori, CS, contour_step, pf_max, outputFileName, visible);
 
@@ -91,9 +91,9 @@ odf = calcDensity(ebsd('Ti-Hex').orientations,'kernel',psi);
 
 TEXTURE_INDEX = textureindex(odf)
 
-%% Plot the ODF slices without contouring for the whole compression sample
+%% Plot the ODF slices without contouring for the whole sample
 
-odf_max = 3.0
+odf_max = 5.0
 outputFileName = strcat(analysis_path,sample_name,'_ODF_entire_region')
 specSym = 'triclinic'
 ODF_plot(phase, odf, odf_max, outputFileName, specSym, visible)

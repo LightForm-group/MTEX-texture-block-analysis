@@ -15,8 +15,8 @@ function [  ] = pole_figure_plot(phase, ori, CS, contour_step, pf_max, outputFil
   if strcmp(phase, 'alpha');
     PF = figure();
     hkil = [Miller(0,0,0,2,ori.CS), Miller(1,0,-1,0,ori.CS), Miller(1,1,-2,0,ori.CS)]; % include hkil figures here
-    plotPDF(ori, hkil,'antipodal', 'contourf', 0:contour_step:pf_max, 'minmax') % plot with contouring
-    %plotPDF(ori, hkil, 'antipodal', 'minmax'); % plot without contouring
+    %plotPDF(ori, hkil,'antipodal', 'contourf', 0:contour_step:pf_max, 'minmax') % plot with contouring
+    plotPDF(ori, hkil, 'antipodal', 'minmax'); % plot without contouring
     text(vector3d.X, 'RD', 'VerticalAlignment', 'bottom'); % moving the vector3d axis labels outside of the hemisphere boundary
     text(vector3d.Y, 'TD', 'horizontalAlignment', 'left');
     f = gcm; % moving up the hkil labels to make room for the rolling direction labels
@@ -32,8 +32,8 @@ function [  ] = pole_figure_plot(phase, ori, CS, contour_step, pf_max, outputFil
   elseif strcmp(phase, 'beta');
     PF = figure();
     hkil = [Miller(0,0,1,ori.CS), Miller(1,1,0,ori.CS), Miller(1,1,1,ori.CS)]; % include hkil figures here
-    plotPDF(ori, hkil,'antipodal', 'contourf', 0:contour_step:pf_max, 'minmax') % plot with contouring
-    %plotPDF(ori, hkil, 'antipodal', 'minmax'); % plot without contouring
+    %plotPDF(ori, hkil,'antipodal', 'contourf', 0:contour_step:pf_max, 'minmax') % plot with contouring
+    plotPDF(ori, hkil, 'antipodal', 'minmax'); % plot without contouring
     text(vector3d.X, 'RD', 'VerticalAlignment', 'bottom'); % moving the vector3d axis labels outside of the hemisphere boundary
     text(vector3d.Y, 'TD', 'horizontalAlignment', 'left');
     f = gcm; % moving up the hkil labels to make room for the rolling direction labels
