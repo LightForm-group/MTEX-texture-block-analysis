@@ -1,4 +1,4 @@
-function [maxval] = pole_figure_plot(phase, ori, CS, contour_step, pf_max, outputFileName, visible);
+function [maxval(1), maxval(2), maxval(3)] = pole_figure_plot(phase, ori, CS, contour_step, pf_max, outputFileName, visible);
 % A function for plotting alpha (hexagonal close-packed) or beta (body-centred-cubic) pole figures using MTEX
   
   if strcmp(visible, 'on');  
@@ -26,8 +26,7 @@ function [maxval] = pole_figure_plot(phase, ori, CS, contour_step, pf_max, outpu
         ax = getappdata(f.children(i),'sphericalPlot');
         minval(i) = ax.minData;
         maxval(i) = ax.maxData;
-    end
-    
+        
     CLim(gcm,[0 pf_max]); % define a colour giving the range (gcm, [min, max])
     mtexColorbar ('location', 'southoutside', 'title', 'mrd'); % move colorbar to horizontal to avoid overlap
     set(gcf, 'PaperPositionMode', 'auto');
@@ -48,8 +47,7 @@ function [maxval] = pole_figure_plot(phase, ori, CS, contour_step, pf_max, outpu
         ax = getappdata(f.children(i),'sphericalPlot');
         minval(i) = ax.minData;
         maxval(i) = ax.maxData;
-    end
-    
+        
     CLim(gcm,[0 pf_max]); % define a colour giving the range (gcm, [min, max])
     mtexColorbar ('location', 'southoutside', 'title', 'mrd'); % move colorbar to horizontal to avoid overlap
     set(gcf, 'PaperPositionMode', 'auto');

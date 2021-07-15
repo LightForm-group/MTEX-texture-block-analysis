@@ -320,11 +320,11 @@ end
 %% Open and write to file to save the different texture strength values
 
 fileTS = fopen(fullfile(analysis_path, strcat(sample_name,'_texture_strength_',num2str(num_squares),'.txt')),'w');
-fprintf(fileTS, 'Square Index \t Texture Index \t ODF Max \t phi1 Angle of ODF Max \t PHI Angle of ODF Max \t phi2 Angle of ODF Max \t {0002} PF Max \t {10-10} PF Max \t {11-20} PF Max \t Basal TD Volume Fraction \t Basal RD Volume Fraction \n');
+fprintf(fileTS, 'Square Index\tTexture Index\tODF Max\tphi1 Angle of ODF Max.\tPHI Angle of ODF Max.\tphi2 Angle of ODF Max.\t{0002} PF Max.\t{10-10} PF Max.\t{11-20} PF Max.\tBasal TD Volume Fraction\tBasal RD Volume Fraction\n');
 
 for square_index = 1:num_squares    
     % write the texture strength values to file
-    fprintf(fileTS, '%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n', square_index, TEXTURE_INDEX_square(square_index), odf_square_max(square_index), rad2deg(phi1(square_index)), rad2deg(PHI(square_index)), rad2deg(phi2(square_index)), PF_basal_max(square_index), PF_prismatic1_max(square_index), PF_prismatic2_max(square_index), basal_TD_volume_fraction(square_index), basal_RD_volume_fraction(square_index))
+    fprintf(fileTS, '%f\t%f\t%f\t%f\t%f\t%f\t%f\n', square_index, TEXTURE_INDEX_square(square_index), odf_square_max(square_index), phi1(square_index), PHI(square_index), phi2(square_index)), PF_basal_max(square_index), PF_prismatic1_max(square_index), PF_prismatic2_max(square_index), basal_TD_volume_fraction(square_index), basal_RD_volume_fraction(square_index))
 end
 
 % close any open files
