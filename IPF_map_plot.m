@@ -23,6 +23,7 @@ function [  ] = IPF_map_plot(phase, ebsd, outputFileName, visible);
     color = oM.orientation2color(ebsd('Ti-Hex').orientations);
     plot(ebsd('Ti-Hex'),color);
     hold off
+    legend off
     saveas (IPF_map, outputFileName, 'png');
     close(IPF_map);
     
@@ -35,6 +36,7 @@ function [  ] = IPF_map_plot(phase, ebsd, outputFileName, visible);
     color = oM.orientation2color(ebsd('Titanium Cubic').orientations);
     plot(ebsd('Titanium Cubic'),color);
     hold off
+    legend off
     saveas (IPF_map, outputFileName, 'png');
     close(IPF_map);
     

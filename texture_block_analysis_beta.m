@@ -16,7 +16,7 @@ setMTEXpref('zAxisDirection','intoPlane');
 pname = '/Users/mbcx9cd4/Documents/MATLAB/ebsd/MTEX-texture-block-analysis/';
 
 % which files to be imported
-sample_name = 'Ti64_915C_87pct_Sample1_TD-ND_Plane'
+sample_name = 'Ti64_915C_87pct_Sample1_TD-ND_Plane_Beta'
 data_path = strcat('Data/',sample_name,'/',sample_name,'_Data.crc')
 
 analysis_path = strcat('Analysis/',sample_name,'/') % path for saving the data
@@ -49,16 +49,16 @@ visible = 'off'
 
 %% Plot the IPF colour map
 
-phase = 'alpha'
+phase = 'beta'
 outputFileName = strcat(analysis_path,sample_name,'_IPF_map_entire_region')
 IPF_map_plot(phase, ebsd, outputFileName, visible)
 
 %% Plot the pole figures for the whole sample
 
-phase = 'alpha'
-ori = ebsd('Ti-Hex').orientations
-contour_step = 0.5
-pf_max = 5.0
+phase = 'beta'
+ori = ebsd('Titanium cubic').orientations
+contour_step = 0.25
+pf_max = 3.0
 outputFileName = strcat(analysis_path,sample_name,'_PF_entire_region')
 pole_figure_plot(phase, ori, CS, contour_step, pf_max, outputFileName, visible);
 
@@ -93,7 +93,7 @@ MAX = max(odf)
 
 %% Plot the ODF slices without contouring for the whole sample
 
-odf_max = 8.0
+odf_max = 5.0
 outputFileName = strcat(analysis_path,sample_name,'_ODF_entire_region')
 specSym = 'orthorhombic'
 ODF_plot(phase, odf, odf_max, outputFileName, specSym, visible)
@@ -119,7 +119,7 @@ y_width = y_right-y_left
 region = [x_top, y_left, x_width, y_width]; % note, region is defined as x,y origin and an x,y width which is added onto the origin
 condition = inpolygon(ebsd,region); % points located within region
 ebsd_cropped = ebsd(condition);
-ori_cropped = ebsd_cropped('Ti-Hex').orientations
+ori_cropped = ebsd_cropped('Titanium cubic').orientations
 
 % change the specimen symmetry to triclinic for plotting the PFs
 ori_cropped.SS = specimenSymmetry('triclinic')
@@ -235,7 +235,7 @@ end
 %% Analyse and plot the sliced data to see how the texture components change along the length
 
 % define the crystal system for the texture components
-cs = ebsd('Ti-Hex').CS;
+cs = ebsd('Titanium cubic').CS;
 
 % define the maximum possible misorientation
 misorientation = 5
@@ -263,14 +263,14 @@ for square_index = 1:num_squares
     outputFileName = strcat(analysis_path,sample_name,'_IPF_map_square_',num2str(square_index))
     IPF_map_plot(phase, ebsd_cutmap, outputFileName, visible)
     
-    ori_square = ebsd_cutmap('Ti-Hex').orientations
+    ori_square = ebsd_cutmap('Titanium cubic').orientations
     % change the specimen symmetry to triclinic for plotting the PFs
     ori_square.SS = specimenSymmetry('triclinic')
     outputFileName = strcat(analysis_path,sample_name,'_PF_square_',num2str(square_index))
     [maxval] = pole_figure_plot(phase, ori_square, CS, contour_step, pf_max, outputFileName, visible);
-    PF_basal_max(square_index) = maxval(1);
-    PF_prismatic1_max(square_index) = maxval(2);
-    PF_prismatic2_max(square_index) = maxval(3);
+    PF_001_max(square_index) = maxval(1);
+    PF_110_max(square_index) = maxval(2);
+    PF_111_max(square_index) = maxval(3);
     
     outputFileName = strcat(analysis_path,sample_name,'_ODF_square_',num2str(square_index))
     % change the specimen symmetry to orthorhombic for plotting the ODF
@@ -300,41 +300,22 @@ for square_index = 1:num_squares
     phi2(square_index) = ori_square_max(square_index).phi2
     
     % seperate the texture components and calculate the volume fractions
-    total_volume = length(ebsd_cutmap) % calculate the total volume as the number of points in the map
-
-    % seperate a texture component and calculate the volume fraction
-    %ebsd_basal_ND = ebsd_cutmap('Ti-Hex').findByOrientation(basal_ND, misorientation*degree);
-    %basal_ND_volume = length(ebsd_basal_ND);
-    %basal_ND_volume_fraction(square_index) = (basal_ND_volume/total_volume)
+    %total_volume = length(ebsd_cutmap) % calculate the total volume as the number of points in the map
     
     % seperate a texture component and calculate the volume fraction
-    %ebsd_tilted_ND = ebsd_cutmap('Ti-Hex').findByOrientation(tilted_ND, misorientation*degree);
-    %tilted_ND_volume = length(ebsd_tilted_ND);
-    %tilted_ND_volume_fraction(square_index) = (tilted_ND_volume/total_volume)
-    
-    % seperate a texture component and calculate the volume fraction
-    %ebsd_basal_TD = ebsd_cutmap('Ti-Hex').findByOrientation(basal_TD, misorientation*degree);
-    %basal_TD_volume = length(ebsd_basal_TD);
-    %basal_TD_volume_fraction(square_index) = (basal_TD_volume/total_volume)
-    
-    % seperate a texture component and calculate the volume fraction
-    %ebsd_basal_RD = ebsd_cutmap('Ti-Hex').findByOrientation(basal_RD, misorientation*degree);
-    %basal_RD_volume = length(ebsd_basal_RD);
-    %basal_RD_volume_fraction(square_index) = (basal_RD_volume/total_volume)
-    
-    % seperate a texture component and calculate the volume fraction
-    basal_TD_volume_fraction(square_index) = volume(odf_square, basal_TD, misorientation*degree);
-    basal_RD_volume_fraction(square_index) = volume(odf_square, basal_RD, misorientation*degree);
+    rotated_cube_volume_fraction(square_index) = volume(odf_square, rotated_cube, misorientation*degree);
+    alpha_fibre_volume_fraction(square_index) = volume(odf_square, alpha_fibre, misorientation*degree);
+    gamma_fibre_volume_fraction(square_index) = volume(odf_square, gamma_fibre, misorientation*degree);
 end
 
 %% Open and write to file to save the different texture strength values
 
 fileTS = fopen(fullfile(analysis_path, strcat(sample_name,'_texture_strength_',num2str(num_squares),'.txt')),'w');
-fprintf(fileTS, 'Square Index \t Texture Index \t ODF Max \t phi1 Angle of ODF Max \t PHI Angle of ODF Max \t phi2 Angle of ODF Max \t {0002} PF Max \t {10-10} PF Max \t {11-20} PF Max \t Basal TD Volume Fraction \t Basal RD Volume Fraction \n');
+fprintf(fileTS, 'Square Index \t Texture Index \t ODF Max \t phi1 Angle of ODF Max \t PHI Angle of ODF Max \t phi2 Angle of ODF Max \t {001} PF Max \t {110} PF Max \t {111} PF Max \t Rotated Cube Volume Fraction \t Alpha Fibre Volume Fraction \t Gamma Fibre Volume Fraction \n');
 
 for square_index = 1:num_squares    
     % write the texture strength values to file
-    fprintf(fileTS, '%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n', square_index, TEXTURE_INDEX_square(square_index), odf_square_max(square_index), rad2deg(phi1(square_index)), rad2deg(PHI(square_index)), rad2deg(phi2(square_index)), PF_basal_max(square_index), PF_prismatic1_max(square_index), PF_prismatic2_max(square_index), basal_TD_volume_fraction(square_index), basal_RD_volume_fraction(square_index))
+    fprintf(fileTS, '%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n', square_index, TEXTURE_INDEX_square(square_index), odf_square_max(square_index), rad2deg(phi1(square_index)), rad2deg(PHI(square_index)), rad2deg(phi2(square_index)), PF_001_max(square_index), PF_110_max(square_index), PF_111_max(square_index), rotated_cube_volume_fraction(square_index), alpha_fibre_volume_fraction(square_index), gamma_fibre_volume_fraction(square_index))
 end
 
 % close any open files
@@ -389,47 +370,56 @@ hold off
 legend('Phi2 Angle')
 saveas (phi2_figure, strcat(analysis_path,sample_name,'_phi2_line_plot_',num2str(num_squares), '.png'));
 
-PF_basal_figure = figure();
+PF_001_figure = figure();
 hold on
-plot(square_index,PF_basal_max,'Color',[1,0,0],'lineWidth',2) % red;
+plot(square_index,PF_001_max,'Color',[1,0,0],'lineWidth',2) % red;
 xlabel('Slice Number')
-ylabel('{0002} Pole Figure Max.')
+ylabel('{001} Pole Figure Max.')
 hold off
-legend('{0002} Pole Figure Max.')
-saveas (PF_basal_figure, strcat(analysis_path,sample_name,'_PF_basal_line_plot_',num2str(num_squares), '.png'));
+legend('{001} Pole Figure Max.')
+saveas (PF_001_figure, strcat(analysis_path,sample_name,'_PF_001_line_plot_',num2str(num_squares), '.png'));
 
-PF_prismatic1_figure = figure();
+PF_110_figure = figure();
 hold on
-plot(square_index,PF_prismatic1_max,'Color',[1,0,0],'lineWidth',2) % red;
+plot(square_index,PF_110_max,'Color',[1,0,0],'lineWidth',2) % red;
 xlabel('Slice Number')
-ylabel('{10-10} Pole Figure Max.')
+ylabel('{110} Pole Figure Max.')
 hold off
-legend('{10-10} Pole Figure Max.')
-saveas (PF_prismatic1_figure, strcat(analysis_path,sample_name,'_PF_prismatic1_line_plot_',num2str(num_squares), '.png'));
+legend('{110} Pole Figure Max.')
+saveas (PF_110_figure, strcat(analysis_path,sample_name,'_PF_110_line_plot_',num2str(num_squares), '.png'));
 
-PF_prismatic2_figure = figure();
+PF_111_figure = figure();
 hold on
-plot(square_index,PF_prismatic2_max,'Color',[1,0,0],'lineWidth',2) % red;
+plot(square_index,PF_111_max,'Color',[1,0,0],'lineWidth',2) % red;
 xlabel('Slice Number')
-ylabel('{11-20} Pole Figure Max.')
+ylabel('{111} Pole Figure Max.')
 hold off
-legend('{11-20} Pole Figure Max.')
-saveas (PF_prismatic2_figure, strcat(analysis_path,sample_name,'_PF_prismatic2_line_plot_',num2str(num_squares), '.png'));
+legend('{111} Pole Figure Max.')
+saveas (PF_111_figure, strcat(analysis_path,sample_name,'_PF_111_line_plot_',num2str(num_squares), '.png'));
 
-TD_volume_fraction_figure = figure();
+rotated_cube_volume_fraction_figure = figure();
 hold on
-plot(square_index,basal_TD_volume_fraction*100,'Color',[1,0,0],'lineWidth',2) % red;
+plot(square_index,rotated_cube_volume_fraction*100,'Color',[1,0,0],'lineWidth',2) % red;
 xlabel('Slice Number')
-ylabel('TD Volume Fraction (%)')
+ylabel('R.C. Volume Fraction (%)')
 hold off
-legend('TD Volume Fraction')
-saveas (TD_volume_fraction_figure, strcat(analysis_path,sample_name,'_basal_TD_volume_fraction_line_plot_',num2str(num_squares), '.png'));
+legend('R.C. Volume Fraction')
+saveas (rotated_cube_volume_fraction_figure, strcat(analysis_path,sample_name,'_rotated_cube_volume_fraction_line_plot_',num2str(num_squares), '.png'));
 
-RD_volume_fraction_figure = figure();
+alpha_fibre_volume_fraction_figure = figure();
 hold on
-plot(square_index,basal_RD_volume_fraction*100,'Color',[1,0,0],'lineWidth',2) % red;
+plot(square_index,alpha_fibre_volume_fraction*100,'Color',[1,0,0],'lineWidth',2) % red;
 xlabel('Slice Number')
-ylabel('RD Volume Fraction (%)')
+ylabel('Alpha Fibre Volume Fraction (%)')
 hold off
-legend('RD Volume Fraction')
-saveas (RD_volume_fraction_figure, strcat(analysis_path,sample_name,'_basal_RD_volume_fraction_line_plot_',num2str(num_squares), '.png'));
+legend('Alpha Fibre Volume Fraction')
+saveas (alpha_fibre_volume_fraction_figure, strcat(analysis_path,sample_name,'_alpha_fibre_volume_fraction_line_plot_',num2str(num_squares), '.png'));
+
+gamma_fibre_volume_fraction_figure = figure();
+hold on
+plot(square_index,gamma_fibre_volume_fraction*100,'Color',[1,0,0],'lineWidth',2) % red;
+xlabel('Slice Number')
+ylabel('Gamma Fibre Volume Fraction (%)')
+hold off
+legend('Gamma Fibre Volume Fraction')
+saveas (gamma_fibre_volume_fraction_figure, strcat(analysis_path,sample_name,'_gamma_fibre_volume_fraction_line_plot_',num2str(num_squares), '.png'));
