@@ -22,6 +22,6 @@ MTEX Installation
 
 The MTEX toolbox can be downloaded from [here](https://mtex-toolbox.github.io/download), which also includes instructions for installing MTEX and troubleshooting any issues.
 
-The scripts have been tested with MTEX Version 5.2.8, but should only require minor adjustments to work with future versions.
+The scripts have been tested with MTEX Version 5.3, but should only require minor adjustments to work with future versions.
 
 Some minor changes to the base MTEX code have been made to produce better looking figures. See [here](https://lightform-group.github.io/wiki/software_and_simulation/mtex-nice-figures) for more information.
