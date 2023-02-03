@@ -12,6 +12,11 @@ Contents
 
 2. `texture_block_analysis_beta.m` An MTEX script to segment the EBSD map to calculate crystallographic texture for the beta phase.
 
+Development
+--------------
+
+This package was developed by Christopher S. Daniel at The University of Manchester, UK, and was funded by the Engineering and Physical Sciences Research Council (EPSRC) via the LightForm programme grant (EP/R001715/1). LightForm is a 5 year multidisciplinary project, led by The Manchester University with partners at University of Cambridge and Imperial College, London (https://lightform.org.uk/).
+
 MATLAB Setup
 -----------
 
